@@ -10,6 +10,7 @@ const Reservation = require("./models/reservation");
 
 const router = new express.Router();
 
+
 /** Homepage: show list of customers. */
 
 router.get("/", async function (req, res, next) {
@@ -40,6 +41,15 @@ router.post("/add/", async function (req, res, next) {
 
   return res.redirect(`/${customer.id}/`);
 });
+
+
+/**  Display top 10 customers based on reservations */
+
+router.get("/top-ten/", async function(req, res, next) {
+  const customers = await Customer.topTen();
+
+  return res.render("customer_list.html", { customers } )
+})
 
 
 /** Show a customer, given their ID. */
@@ -103,13 +113,5 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
   return res.redirect(`/${customerId}/`);
 });
 
-
-/**  Display top 10 customers based on reservations */
-
-router.get("/top-ten/", async function(req, res, next) {
-  const customers = await Customer.topTen();
-
-  return res.render("customer_list.html", { customers } )
-})
 
 module.exports = router;

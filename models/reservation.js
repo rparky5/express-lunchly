@@ -6,6 +6,7 @@ const moment = require("moment");
 
 const db = require("../db");
 
+
 /** A reservation for a party */
 
 class Reservation {
@@ -17,11 +18,13 @@ class Reservation {
     this.notes = notes;
   }
 
+
   /** formatter for startAt */
 
   getFormattedStartAt() {
     return moment(this.startAt).format("MMMM Do YYYY, h:mm a");
   }
+
 
   /** given a customer id, find their reservations. */
 
@@ -39,6 +42,7 @@ class Reservation {
 
     return results.rows.map(row => new Reservation(row));
   }
+
 
   /** save a reservation for customer */
 

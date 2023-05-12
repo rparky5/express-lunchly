@@ -5,6 +5,7 @@
 const db = require("../db");
 const Reservation = require("./reservation");
 
+
 /** Customer of the restaurant. */
 
 class Customer {
@@ -16,6 +17,7 @@ class Customer {
     this.notes = notes;
   }
 
+
   /** find all customers. */
 
   static async all(searchTerm) {
@@ -25,9 +27,7 @@ class Customer {
     const results = await db.query(
           `SELECT id,
                   first_name AS "firstName",
-                  last_name  AS "lastName",
-                  phone,
-                  notes
+                  last_name  AS "lastName"
             FROM customers
             WHERE first_name ILIKE $1
             OR last_name ILIKE $1
@@ -64,11 +64,13 @@ class Customer {
     return new Customer(customer);
   }
 
+
   /** get all reservations for this customer. */
 
   async getReservations() {
     return await Reservation.getReservationsForCustomer(this.id);
   }
+
 
   /** save this customer. */
 
@@ -99,19 +101,21 @@ class Customer {
     }
   }
 
+
   /** return string of customer firstName + lastName */
 
   fullName() {
     return `${this.firstName} ${this.lastName}`
   }
 
+
   /** return list of top ten customers based on reservation count */
+
   static async topTen() {
     const results = await db.query(
       `SELECT c.id,
               first_name AS "firstName",
-              last_name  AS "lastName",
-              COUNT(*)
+              last_name  AS "lastName"
         FROM customers AS c
         JOIN reservations AS r
         ON c.id = r.customer_id
