@@ -31,11 +31,13 @@ class Customer {
             FROM customers
             WHERE first_name ILIKE $1
             OR last_name ILIKE $1
+            OR (first_name||' '||last_name) ILIKE $1
             ORDER BY last_name, first_name`,
             [`%${searchTerm}%`]
     );
     return results.rows.map(c => new Customer(c));
   }
+
 
   /** get a customer by ID. */
 
@@ -101,6 +103,24 @@ class Customer {
 
   fullName() {
     return `${this.firstName} ${this.lastName}`
+  }
+
+  /** return list of top ten customers based on reservation count */
+  static async topTen() {
+    const results = await db.query(
+      `SELECT c.id,
+              first_name AS "firstName",
+              last_name  AS "lastName",
+              COUNT(*)
+        FROM customers AS c
+        JOIN reservations AS r
+        ON c.id = r.customer_id
+        GROUP BY c.id
+        ORDER BY COUNT(*) DESC, last_name, first_name
+        LIMIT 10
+        `);
+
+    return results.rows.map(c => new Customer(c));
   }
 
 }
