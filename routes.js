@@ -13,9 +13,24 @@ const router = new express.Router();
 /** Homepage: show list of customers. */
 
 router.get("/", async function (req, res, next) {
-  const customers = await Customer.all();
+  debugger;
+  const searchTerm = req.query.search;
+  let customers;
+
+  // TODO: how should we refactor this?
+  searchTerm ? customers = await Customer.search(searchTerm) : customers = await Customer.all()
+
+  return res.render("customer_list.html", { customers })
+});
+
+
+/** Homepage: show list of searched for customers. */
+/*
+router.post("/", async function (req, res, next) {
+  const customers = await Customer.search(req.);
   return res.render("customer_list.html", { customers });
 });
+*/
 
 /** Form to add a new customer. */
 
