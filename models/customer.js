@@ -19,11 +19,8 @@ class Customer {
 
 
   /** find all customers. */
-
-  static async all(searchTerm) {
-    if (!searchTerm) {
-      searchTerm = '';
-    }
+//TODO: make order by case insensitive
+  static async all(searchTerm='') {
     const results = await db.query(
           `SELECT id,
                   first_name AS "firstName",
@@ -35,6 +32,7 @@ class Customer {
             ORDER BY last_name, first_name`,
             [`%${searchTerm}%`]
     );
+
     return results.rows.map(c => new Customer(c));
   }
 
@@ -102,7 +100,7 @@ class Customer {
   }
 
 
-  /** return string of customer firstName + lastName */
+  /** return string of customer "firstName lastName" */
 
   fullName() {
     return `${this.firstName} ${this.lastName}`
@@ -115,12 +113,14 @@ class Customer {
     const results = await db.query(
       `SELECT c.id,
               first_name AS "firstName",
-              last_name  AS "lastName"
+              last_name  AS "lastName",
+              phone,
+              c.notes
         FROM customers AS c
         JOIN reservations AS r
         ON c.id = r.customer_id
         GROUP BY c.id
-        ORDER BY COUNT(*) DESC, last_name, first_name
+        ORDER BY COUNT(c.id) DESC, last_name, first_name
         LIMIT 10
         `);
 

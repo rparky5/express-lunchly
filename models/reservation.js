@@ -58,12 +58,10 @@ class Reservation {
     } else {
       await db.query(
             `UPDATE reservations
-             SET customer_id=$1,
-                 start_at=$2,
+             SET start_at=$2,
                  num_guests=$3,
                  notes=$4
              WHERE id = $5`, [
-            this.customerId,
             this.startAt,
             this.numGuests,
             this.notes,
@@ -72,7 +70,7 @@ class Reservation {
       );
     }
   }
-
+//TODO: change $ values
 }
 
 
