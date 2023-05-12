@@ -41,8 +41,8 @@ class Customer {
             phone,
             notes
       FROM customers
-      WHERE first_name LIKE '%'||$1||'%'
-      OR last_name LIKE '%'||$1||'%'
+      WHERE LOWER(first_name) LIKE LOWER('%'||$1||'%')
+      OR LOWER(last_name) LIKE LOWER('%'||$1||'%')
       ORDER BY last_name, first_name`,
       [searchTerm]
     )
