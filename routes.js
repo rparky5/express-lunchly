@@ -13,12 +13,8 @@ const router = new express.Router();
 /** Homepage: show list of customers. */
 
 router.get("/", async function (req, res, next) {
-  debugger;
   const searchTerm = req.query.search;
-  let customers;
-
-  // TODO: how should we refactor this?
-  searchTerm ? customers = await Customer.search(searchTerm) : customers = await Customer.all()
+  const customers = await Customer.all(searchTerm);
 
   return res.render("customer_list.html", { customers })
 });

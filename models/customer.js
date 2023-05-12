@@ -18,34 +18,22 @@ class Customer {
 
   /** find all customers. */
 
-  static async all() {
+  static async all(searchTerm) {
+    if (!searchTerm) {
+      searchTerm = '';
+    }
     const results = await db.query(
           `SELECT id,
                   first_name AS "firstName",
                   last_name  AS "lastName",
                   phone,
                   notes
-           FROM customers
-           ORDER BY last_name, first_name`,
+            FROM customers
+            WHERE first_name ILIKE $1
+            OR last_name ILIKE $1
+            ORDER BY last_name, first_name`,
+            [`%${searchTerm}%`]
     );
-    return results.rows.map(c => new Customer(c));
-  }
-
-  /** find specific customers given search parameters */
-
-  static async search(searchTerm) {
-    const results = await db.query(
-      `SELECT id,
-            first_name AS "firstName",
-            last_name  AS "lastName",
-            phone,
-            notes
-      FROM customers
-      WHERE LOWER(first_name) LIKE LOWER('%'||$1||'%')
-      OR LOWER(last_name) LIKE LOWER('%'||$1||'%')
-      ORDER BY last_name, first_name`,
-      [searchTerm]
-    )
     return results.rows.map(c => new Customer(c));
   }
 
